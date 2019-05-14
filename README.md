@@ -15,6 +15,6 @@ This compose file assumes the following file-structure:
 
 1. Clone this repository
 2. Modify the docker-compose if needed (to suit your specific needs)
-3. docker-compose up --buiild --force-recreate
+3. docker-compose up --build --force-recreate
 
-And thats it!
+And that's it!
