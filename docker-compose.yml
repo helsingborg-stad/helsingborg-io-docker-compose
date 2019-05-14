@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+
+  mysql:
+    image: mysql:latest
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql-vol:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=hbgworks
+
+  labs-node-js-boilerplate:
+    image: labs-node-js-boilerplate
+    build: ../labs-node-js-boilerplate
+    hostname: labs-node-js-boilerplate
+    ports:
+    - 3000:3000
+    restart: unless-stopped
+    env_file:
+      - ../labs-node-js-boilerplate/.env
+
+volumes:
+  mysql-vol:
