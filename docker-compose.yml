@@ -3,7 +3,7 @@ version: '3'
 services:
 
   mysql:
-    image: mysql:latest
+    image: mysql:5.7
     restart: always
     ports:
       - 3306:3306
@@ -11,6 +11,9 @@ services:
       - mysql-vol:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=hbgworks
+      - MYSQL_DATABASE=hbgworks_db
+      - MYSQL_USER=hbgworks_user
+      - MYSQL_PASSWORD=hbgworks_pw
 
   labs-node-js-boilerplate:
     image: labs-node-js-boilerplate
@@ -21,6 +24,16 @@ services:
     restart: unless-stopped
     env_file:
       - ../labs-node-js-boilerplate/.env
+
+  labs-api-notification:
+    image: labs-api-notification
+    build: ../labs-api-notification
+    hostname: labs-api-notification
+    ports:
+    - 3001:3001
+    restart: unless-stopped
+    env_file:
+      - ../labs-api-notification/.env
 
 volumes:
   mysql-vol:
