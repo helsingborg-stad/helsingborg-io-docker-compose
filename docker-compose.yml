@@ -17,23 +17,25 @@ services:
 
   labs-node-js-boilerplate:
     image: labs-node-js-boilerplate
-    build: ../labs-node-js-boilerplate
+    build: https://github.com/helsingborg-stad/labs-node-js-boilerplate.git
     hostname: labs-node-js-boilerplate
     ports:
     - 3000:3000
     restart: unless-stopped
-    env_file:
-      - ../labs-node-js-boilerplate/.env
+    environment:
+      - PORT=3000
+      - LOG_LEVEL=info
 
   labs-api-notification:
     image: labs-api-notification
-    build: ../labs-api-notification
+    build: https://github.com/helsingborg-stad/labs-api-notification.git
     hostname: labs-api-notification
     ports:
     - 3001:3001
     restart: unless-stopped
-    env_file:
-      - ../labs-api-notification/.env
+    environment:
+      - PORT=3000
+      - LOG_LEVEL=info
 
 volumes:
   mysql-vol:
