@@ -15,6 +15,19 @@ services:
       - MYSQL_USER=hbgworks_user
       - MYSQL_PASSWORD=hbgworks_pw
 
+  notifications-mysql:
+    image: mysql:5.7
+    restart: always
+    ports:
+      - 3307:3306
+    volumes:
+      - notifications-vol:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=notifications
+      - MYSQL_DATABASE=notifications_db
+      - MYSQL_USER=notifications_user
+      - MYSQL_PASSWORD=notifications_pw
+
   labs-node-js-boilerplate:
     image: labs-node-js-boilerplate
     build: https://github.com/helsingborg-stad/labs-node-js-boilerplate.git
@@ -23,8 +36,17 @@ services:
     - 3000:3000
     restart: unless-stopped
     environment:
-      - PORT=3000
+      - SERVER_PORT=3000
       - LOG_LEVEL=info
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_DB=hbgworks_db
+      - MYSQL_CONNECTION_LIMIT=10
+      - MYSQL_USER=hbgworks_user
+      - MYSQL_PASSWORD=hbgworks_pw
+    depends_on:
+      - mysql
+    command: sh -c './wait-for mysql:3306 -- npm run migrate:latest && npm start'
 
   labs-api-notification:
     image: labs-api-notification
@@ -34,8 +56,18 @@ services:
     - 3001:3001
     restart: unless-stopped
     environment:
-      - PORT=3001
+      - SERVER_PORT=3001
       - LOG_LEVEL=info
+      - MYSQL_HOST=notifications-mysql
+      - MYSQL_PORT=3306
+      - MYSQL_DB=notifications_db
+      - MYSQL_CONNECTION_LIMIT=10
+      - MYSQL_USER=notifications_user
+      - MYSQL_PASSWORD=notifications_pw
+    depends_on:
+      - notifications-mysql
+    command: sh -c './wait-for notifications-mysql:3306 -- npm run migrate:latest && npm start'
 
 volumes:
   mysql-vol:
+  notifications-vol:
