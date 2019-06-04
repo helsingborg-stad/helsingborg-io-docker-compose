@@ -28,6 +28,19 @@ services:
       - MYSQL_USER=notifications_user
       - MYSQL_PASSWORD=notifications_pw
 
+  services-mysql:
+    image: mysql:5.7
+    restart: always
+    ports:
+      - 3308:3306
+    volumes:
+      - services-vol:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=services
+      - MYSQL_DATABASE=services_db
+      - MYSQL_USER=services_user
+      - MYSQL_PASSWORD=services_pw
+
   labs-node-js-boilerplate:
     image: labs-node-js-boilerplate
     build: https://github.com/helsingborg-stad/labs-node-js-boilerplate.git
@@ -71,3 +84,4 @@ services:
 volumes:
   mysql-vol:
   notifications-vol:
+  services-vol:
