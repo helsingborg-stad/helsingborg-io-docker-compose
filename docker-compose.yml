@@ -80,6 +80,26 @@ services:
     depends_on:
       - notifications-mysql
     command: sh -c './wait-for notifications-mysql:3306 -- npm run migrate:latest && npm start'
+  
+  labs-api-services:
+    image: labs-api-services
+    build: https://github.com/helsingborg-stad/labs-api-services.git
+    hostname: labs-api-services
+    ports:
+    - 3002:3002
+    restart: unless-stopped
+    environment:
+      - SERVER_PORT=3002
+      - LOG_LEVEL=info
+      - MYSQL_HOST=services-mysql
+      - MYSQL_PORT=3306
+      - MYSQL_DB=services_db
+      - MYSQL_CONNECTION_LIMIT=10
+      - MYSQL_USER=services_user
+      - MYSQL_PASSWORD=services_pw
+    depends_on:
+      - services-mysql
+    command: sh -c './wait-for services-mysql:3306 -- npm run migrate:latest && npm start'
 
 volumes:
   mysql-vol:
